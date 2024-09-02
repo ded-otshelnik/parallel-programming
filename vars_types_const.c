@@ -32,6 +32,9 @@ int main(){
     // type convert of float and double
     d_var = (double) f_var;
     f_var = (float) d_var;
+
+    // characters
+    char ch = 'a';
     
     // constants
 
