@@ -16,6 +16,11 @@ void print_characteristics(int a, int b){
     printf("Garmonic of %d and %d is %f", a, b, garmonic(a, b));
 }
 
+/**
+ * @brief Main part of program
+ * 
+ * @return int 
+ */
 int main(){
     int a = 10;
     int b = 11;
