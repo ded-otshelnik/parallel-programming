@@ -11,9 +11,9 @@ double garmonic(int a, int b);
 // void function that returns nothing
 void print_characteristics(int a, int b){
     // it works
-    printf("Mean of %d and %d is %f", a, b, mean(a, b));
+    printf("Mean of %d and %d is %f\n", a, b, mean(a, b));
     // it also will work
-    printf("Garmonic of %d and %d is %f", a, b, garmonic(a, b));
+    printf("Garmonic of %d and %d is %f\n", a, b, garmonic(a, b));
 }
 
 /**
