@@ -59,6 +59,21 @@ wsl --unregister <DistributionName>
 
 Список доступных команд можно посмотреть [здесь](https://learn.microsoft.com/ru-ru/windows/wsl/basic-commands#unregister-or-uninstall-a-linux-distribution).
 
+Иногда после первого запуска требуется запустить две команды, обновляющие компоненты машины. Для Ubuntu требуются вот такие команды:
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+Если на Ubuntu не стоит _gcc_ (можно проверить через команду ```gcc -v```, выводящая версию компилятора), то выполняется следующая команда:
+
+```bash
+sudo apt install gcc --fix-missing
+```
+
+Команда установит компилятор со всеми зависимостями. Проверить работоспособность можно через ```gcc -v```.
+
 ### Настройка VSCode
 
 Для работы с WSL в VSCode понадобится всего одно расширение - [WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl). Оно интегрирует в VSCode механизм подключения к виртуалке, что позволяет запускать сессию на виртуалке и работать там как на удаленной машине (про удаленные машины позже). Вы получаете все преимущества разработки под Linux, не выходя из Windows, посредством VSCode.
