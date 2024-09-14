@@ -1,7 +1,7 @@
 #include <stdio.h>
 // const using #define
 #define DEF_CONST 0
-// const within function
+// const within file (accessible in other files)
 const int global_const = 0;
 // enumeration (set of constants)
 enum ENUM_CONSTANTS {NIL, ONE, TWO};
@@ -14,7 +14,7 @@ int main(){
     int int_var = 1;
     long long_var = 1l;
     long long ll_var = 1LL;
-    unsigned int uint_var = 1;
+    unsigned uint_var = 1;
 
     // type convert of integers
 
