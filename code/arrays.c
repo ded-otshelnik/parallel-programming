@@ -3,15 +3,8 @@
 // macros for getting length of array
 #define length(array) (sizeof(array) / sizeof(*array))
 
-void func_ptr(int* arr, int len){
-    printf("\nPassing array by pointer\n");
-    for (int i = 0; i < len; i++){
-        // address arithmetic 
-        printf("%d ", *(arr + i));
-    }
-    printf("\n");
-}
-
+// actually int arr[] ~ int *arr
+// so we can't pass array by value
 void func_arr(int arr[], int len){
     printf("\nPassing array by value\n");
     for (int i = 0; i < len; i++){
@@ -36,7 +29,6 @@ int main(){
 
     // calls are the same but passing is different
     func_arr(numbers, len);
-    func_ptr(numbers, len);
 
     return 0;
 }
