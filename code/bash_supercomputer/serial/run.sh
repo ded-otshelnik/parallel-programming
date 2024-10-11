@@ -5,7 +5,7 @@ script_name=$0
 
 # func that prints help string
 function usage() {
-     echo "Usage: $script_name <executable>> [-r|--recompile] [-d|--delete]";
+     echo "Usage: $script_name <executable> [-r|--recompile] [-d|--delete]";
 }
 
 # set name of executable file and move to next params
