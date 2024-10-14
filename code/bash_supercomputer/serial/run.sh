@@ -21,8 +21,7 @@ while [[ $# -gt 0 ]]; do
         ;;
         "-d" | "--delete")
             # delete previous jobs results
-            find . -name "$task-$n-*" -type f -delete
-            shift
+            find . -name "$task-*" -type f -delete
         ;;
     esac
     # go to next parameter
@@ -30,9 +29,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 # specify output files for out and error streams respectively
-# in following format "task-num_proc-%A.*" where %A - master task ID
-error=$task-$n-%A.err
-output=$task-$n-%A.out
+# in following format "$task-serial-%A.*" where %A - master task ID
+error=$task-serial-%A.err
+output=$task-serial-%A.out
 
 # create a job for slurm scheduler
 sbatch --partition=stu --error=$error --output=$output --time=5 --wrap="./$task"
