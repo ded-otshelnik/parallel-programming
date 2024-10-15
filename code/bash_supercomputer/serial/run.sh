@@ -5,26 +5,17 @@ script_name=$0
 
 # func that prints help string
 function usage() {
-    echo "Usage: $script_name <task>
-        [-c|--compile]
-        [-d|--delete]"
+    echo "Usage: $script_name
+         -t | --task=<task>
+        [-h | --help]
+        [-c | --compile]
+        [-d | --delete]
+        [-u | --unlock-mem]"
 }
 
-# if source file exists
-if [[ -f "$1.c" ]];
-then
-    # set name of task and move to next params
-    task=$1
-    shift
-else
-    echo "Source file does not exist. Use correct source file name."
-    usage
-    exit 1
-fi
-
 opts=$(getopt \
-        --longoptions compile,delete,help\
-        --options hcd \
+        --longoptions task:,compile,delete,help,unlock-mem\
+        --options ht:cdu \
         --name $script_name \
         -- "$@")
 
@@ -33,29 +24,54 @@ eval set --${opts}
 # parse flags
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -n | --num_proc)
-            # set number of processors
-            n=$2
-            shift
+        -h | --help)
+            usage
+            exit 0
+        ;;
+        -t|--task)
+            # if source file exists
+            if [[ -f "$2.c" ]];
+            then
+                # set name of task and move to next params
+                task=$2
+                shift
+            else
+                echo "Source file does not exist or was not specified correctly. Use right source file name."
+                usage
+                exit 1
+            fi
         ;;
         -c | --compile)
-            # compile task by gcc
-            gcc $task.c -o $task -std=gnu99 -fopenmp
+            # if task source file exists
+            if [[ -f "$task" ]];
+            then        
+                # compile task by gcc
+                gcc $task.c -o $task -std=gnu99 -fopenmp
+            else
+                echo "Task was not specified. Use correct source file or disable flag."
+                usage
+                exit 1
+            fi
         ;;
         -d | --delete)
             # delete previous jobs results
             find . -name "$task-*.out" -type f -delete
             find . -name "$task-*.err" -type f -delete
         ;;
+        -u | --unlock-mem)
+            # unlock all available memory
+            ulimit -s unlimited
+            shift
+        ;;
         --)
             # it indicates the end of flags
-            # all next after "--" args  will be ignored
+            # all next args after "--" will be ignored
             shift
             break
         ;;
         *) 
             echo "Unsupported option $1"
-            usage $script_name
+            usage
             exit 1
         ;;
     esac

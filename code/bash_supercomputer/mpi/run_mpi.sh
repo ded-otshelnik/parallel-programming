@@ -5,24 +5,14 @@ script_name=$0
 
 # func that prints help string
 function usage() {
-    echo "Usage: $script_name <executable>
-        -n <number of cores>|--num-proc=<number of cores>
+    echo "Usage: $script_name
+        -t <task> |  --task=<task>
+        -n <number of cores> | --num-proc=<number of cores>
         [--mem-per-cpu=<memory for one CPU>]
-        [-c|--compile]
-        [-d|--delete]"
+        [-c | --compile]
+        [-d | --delete]
+        [-u | --unlock-mem]"
 }
-
-# if source file exists
-if [[ -f "$1.c" ]];
-then
-    # set name of executable file and move to next params
-    task=$1
-    shift
-else
-    echo "Source file does not exist. Use correct source file name."
-    usage
-    exit 1
-fi
 
 # reload modules related to MPI
 module purge
@@ -30,8 +20,8 @@ module load gcc/4.8.5 openmpi/3.0.5
 
 # parse flags by pattern
 opts=$(getopt \
-        --longoptions compile,delete,help,num-proc:,mem-per-cpu:\
-        --options hn:cd \
+        --longoptions task:,compile,delete,help,num-proc:,mem-per-cpu:,unlock-mem\
+        --options t:hun:cd \
         --name $script_name \
         -- "$@")
 eval set --${opts}
@@ -43,6 +33,19 @@ do
         -h | --help)
             usage
             exit 0
+        ;;
+        -t | --task)
+            # if source file exists
+            if [[ -f "$2.c" ]];
+            then
+                # set name of task and move to next params
+                task=$2
+                shift 2
+            else
+                echo "Source file does not exist or was not specified correctly. Use right source file name."
+                usage
+                exit 1
+            fi
         ;;
         -n | --num-proc)
             # set number of processors
@@ -64,11 +67,21 @@ do
             find . -name "$task-$n-*" -type f -delete
             shift
         ;;
+        -u | --unlock-mem)
+            # unlock all available memory
+            ulimit -s unlimited
+            shift
+        ;;
         --)
             # all args that does not matched by getopt
             # will be ignored
             shift
             break
+        ;;
+        *) 
+            echo "Unsupported option $1"
+            usage
+            exit 1
         ;;
     esac
     # go to next parameter
@@ -76,7 +89,7 @@ done
 
 if [ -z "${n}" ]; then
     echo "Number of cores was not set"
-    usage $script_name
+    usage
     exit 1
 fi
 
@@ -87,9 +100,6 @@ then
     # in following format "task-num_proc-%A.*" where %A - master task ID
     error=$task-$n-%A.err
     output=$task-$n-%A.out
-
-    # unlock all available memory
-    ulimit -s unlimited
 
     if [ -z "${mem_per_cpu}" ];
     then
