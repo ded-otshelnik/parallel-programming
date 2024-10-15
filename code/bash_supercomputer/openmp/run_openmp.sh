@@ -27,12 +27,17 @@ while [[ $# -gt 0 ]]; do
         "-d" | "--delete")
             # delete previous jobs results
             find . -name "$task-$n-*" -type f -delete
-            shift
         ;;
     esac
     # go to next parameter
     shift
 done
+
+if [ -z "${n}" ]; then
+    echo "Number of processors was not set"
+    usage $script_name
+    exit 1
+fi
 
 # specify output files for out and error streams respectively
 # in following format "task-num_proc-%A.*" where %A - master task ID

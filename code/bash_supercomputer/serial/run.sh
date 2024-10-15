@@ -21,7 +21,7 @@ while [[ $# -gt 0 ]]; do
         ;;
         "-d" | "--delete")
             # delete previous jobs results
-            find . -name "$task-*" -type f -delete
+            find . -name "$task-serial-*" -type f -delete
         ;;
     esac
     # go to next parameter
