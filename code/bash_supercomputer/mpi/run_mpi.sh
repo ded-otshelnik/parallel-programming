@@ -25,18 +25,15 @@ while [[ $# -gt 0 ]]; do
             shift
         ;;
         "-r" | "--recompile")
-            echo "Recompile binary file"
             # compile task by mpicc
             mpicc $task.c -o $task -std=gnu99
         ;;
         "--mem-per-cpu")
-            echo "Specify memory for each CPU"
             # set memory amount of real memory per each cpu
             mem_per_cpu=$2
             shift
         ;;
         "-d" | "--delete")
-            echo "Delete previous jobs"
             # delete previous jobs results
             find . -name "$task-$n-*" -type f -delete
             shift
@@ -46,6 +43,12 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+if [ -z "${n}" ]; then
+    echo "Number of processors was not set"
+    usage $script_name
+    exit 1
+fi
+
 # specify output files for out and error streams respectively
 # in following format "task-num_proc-%A.*" where %A - master task ID
 error=$task-$n-%A.err
@@ -53,12 +56,6 @@ output=$task-$n-%A.out
 
 # unlock all available memory
 ulimit -s unlimited
-
-if [ -z "${n}" ]; then
-    echo "Number of processors was not set"
-    usage $script_name
-    exit 1
-fi
 
 if [ -z "${mem_per_cpu}" ];
 then
