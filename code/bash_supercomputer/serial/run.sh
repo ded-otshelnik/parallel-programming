@@ -46,7 +46,7 @@ while [[ $# -gt 0 ]]; do
             if [[ -f "$task" ]];
             then        
                 # compile task by gcc
-                gcc $task.c -o $task -std=gnu99 -fopenmp
+                gcc $task.c -o $task -std=gnu99 -fopenmp -Wall -g -lm
             else
                 echo "Task was not specified. Use correct source file or disable flag."
                 usage

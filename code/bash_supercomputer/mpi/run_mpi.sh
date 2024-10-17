@@ -54,7 +54,7 @@ do
         ;;
         -c | --compile)
             # compile task by mpicc
-            mpicc $task.c -o $task -std=gnu99
+            mpicc $task.c -o $task -std=gnu99 -Wall -g -lm
             shift
         ;;
         --mem-per-cpu)

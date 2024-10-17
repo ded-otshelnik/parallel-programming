@@ -49,7 +49,7 @@ do
         ;;
         -c | --compile)
             # compile task by mpicc
-            gcc $task.c -o $task -std=gnu99 -fopenmp
+            gcc $task.c -o $task -std=gnu99 -fopenmp -Wall -g -lm
             shift
         ;;
         -d | --delete)
