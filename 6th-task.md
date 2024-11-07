@@ -72,11 +72,41 @@ MPI_Comm_size(MPI_COMM_WORLD, &size);
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 ```
 
+Чтобы грамл
+
 ## Стандартный способ передачи сообщений
 
 Под **сообщением** понимается вектор данных фиксированного типа. Некоторые доступные типы представлены [здесь](https://rookiehpc.org/mpi/docs/mpi_datatype/index.html).
 
-Рассмотрим простейший способ передачи сообщения - **point-to-point communication (попарный обмен сообщениями между процессами)**. Для попарного обмена сообщениями используются две функции ```MPI_Send()``` и ```MPI_Recv()```
+Рассмотрим простейший способ передачи сообщения - **point-to-point communication (попарный обмен сообщениями между процессами)**. Для попарного обмена сообщениями используются две функции ```MPI_Send()``` и ```MPI_Recv()```:
+
+```c
+int MPI_Send(const void* buf, int count, MPI_Datatype datatype,
+             int dest, int tag, MPI_Comm comm)
+int MPI_Recv(void* buf, int count, MPI_Datatype datatype,
+             int source, int tag, MPI_Comm comm, MPI_Status* status)
+```
+
+где *buf* - адрес буфера памяти с пересылаемым сообщением, *count* - длина сообщения, *datatype* - тип данных, *source* - ранг процесса-отправителя, *dest* - ранг процесса-получателя, *tag* - идентификатор сообщения, *comm* - коммуникатор, содержащий оба процесса, *status* - указатель на структуру, содержащую некоторую информацио о принятом сообщении.
+
+Несмотря на свою простоту, неправильный вызов функций может привести к "тупику" (**deadlock**), когда оба процесса заблокированы из-за невозможности выполнить обмен сообщениями. Для преодоления подобной проблемы существует функция ```MPI_Sendrecv()```, которая объединяет действия двух функций.
+
+```c
+int MPI_Sendrecv(const void* sendbuf, int sendcount, MPI_Datatype sendtype, int dest, int sendtag,
+                 void* recvbuf, int recvcount, MPI_Datatype recvtype, int source, int resvtag,
+                 MPI_Comm comm, MPI_Status* status)
+```
+
+По умолчанию адреса *sendbuf* и *recvbuf* не должны совпадать. Если требуется изменить данные внутри одного буфера, то для этого используется функция ```MPI_Sendrecv_replace()```:
+
+```c
+int MPI_Sendrecv_replace(void* buf, int count, MPI_Datatype datatype,
+                 int dest, int sendtag,
+                 int source, int resvtag,
+                 MPI_Comm comm, MPI_Status* status)
+```
+
+Если требуется, чтобы процесс получал от любого источника, отправлял любому получателю или принимал сообщения с любым тегом, то для 
 
 ## Задания
 
