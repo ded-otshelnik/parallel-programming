@@ -11,6 +11,8 @@
 + [3 таск](3rd-task.md)
 + [4 таск](4rd-task.md)
 + [5 таск](5th-task.md)
++ [6 таск](6th-task.md)
++ [7 таск](7th-task.md)
 
 ## Туториалы
 
