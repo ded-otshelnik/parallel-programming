@@ -16,5 +16,5 @@
   + [Структуры, управление памятью, заголовочные файлы](practices/memory_structs_etc.md)
   + [Параллельная технология OpenMP](practices/openmp.md)
   + [Параллельная технология MPI](practices/mpi.md)
-+ [Разработка на Си с помощью Visual Studio Code на удаленных машинах](vscode-remote-linux.md)
-+ [Гайд по использованию суперкомпьютера](supercomputer-guide.md)
++ [Разработка на Си с помощью Visual Studio Code на удаленных машинах](practices/vscode-remote-linux.md)
++ [Гайд по использованию суперкомпьютера](practices/supercomputer-guide.md)
