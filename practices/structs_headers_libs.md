@@ -135,7 +135,7 @@ typedef struct list_node{
 typedef int (*PFI) (char*, char*);
 ```
 
-[К оглавлению](structs_headers_libs.md#структуры-управление-памятью-заголовочные-файлы)
+[К оглавлению](structs_headers_libs.md#структуры-заголовочные-файлы-инструменты-сборки)
 
 ## Заголовочные файлы: взгляд внутрь
 
@@ -208,7 +208,7 @@ typedef int (*PFI) (char*, char*);
 
 Пример программы с раздельными компонентами, связанными через заголовочный файл представлен [здесь](code/lib).
 
-[К оглавлению](structs_headers_libs.md#структуры-управление-памятью-заголовочные-файлы)
+[К оглавлению](structs_headers_libs.md#структуры-заголовочные-файлы-инструменты-сборки)
 
 ## Библиотеки: статические и динамические
 
@@ -251,7 +251,7 @@ export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
 ./myprogram
 ```
 
-[К оглавлению](structs_headers_libs.md#структуры-управление-памятью-заголовочные-файлы)
+[К оглавлению](structs_headers_libs.md#структуры-заголовочные-файлы-инструменты-сборки)
 
 ## Продвинутая компиляция: Make и CMake
 
@@ -295,7 +295,7 @@ make
 
 ### CMake
 
-**[CMake](https://cmake.org/)** - это более современный и мощный инструмент для управления сборкой, который позволяет создавать кросс-платформенные проекты. CMake использует файл с именем *CMakeLists.txt*, в котором описываются цели сборки, зависимости и настройки проекта. Пример простого *CMakeLists.txt*:
+**[CMake](https://cmake.org/cmake/help/latest/)** - это более современный и мощный инструмент для управления сборкой, который позволяет создавать кросс-платформенные проекты. CMake использует файл с именем *CMakeLists.txt*, в котором описываются цели сборки, зависимости и настройки проекта. Пример простого *CMakeLists.txt*:
 
 ```cmake
 # Минимальная версия CMake
@@ -312,6 +312,46 @@ file(GLOB SOURCES "*.c")
 
 # Создание исполняемого файла из найденных исходных файлов
 add_executable(myprogram ${SOURCES})
+```
+
+[К оглавлению](structs_headers_libs.md#структуры-заголовочные-файлы-инструменты-сборки)
+
+## .clang-format
+
+Для форматирования кода в соответствии с определенными стилями используется инструмент **[clang-format](https://clang.llvm.org/docs/ClangFormat.html)**, который является частью проекта LLVM. Он позволяет автоматически форматировать исходный код на C, C++, Java, JavaScript, Objective-C, Protobuf и других языках.
+
+Установка clang-format достаточно проста. Напрмимер, в Ubuntu:
+
+```bash
+sudo apt-get install clang-format
+```
+
+После установки, можно создать файл конфигурации `.clang-format` в корневом каталоге проекта. Пример простого файла конфигурации:
+
+```yaml
+# Style that clang-format will use
+BasedOnStyle: Google
+# Spaces amount for each indentation level
+IndentWidth: 4
+# Maximum allowed line length
+ColumnLimit: 100
+# Use spaces instead of tabs
+UseTab: Never
+# Place the opening brace of a function on the same line as the function declaration
+BraceWrapping:
+  AfterFunction: false
+```
+
+Clang-format можно использовать из командной строки для форматирования отдельных файлов или всех файлов в проекте. Например, чтобы отформатировать файл `main.c`, можно выполнить следующую команду:
+
+```bash
+clang-format -i main.c
+```
+
+Флаг `-i` указывает на то, что изменения будут внесены непосредственно в файл. Если нужно отформатировать все файлы в проекте, можно использовать следующую команду, которая найдет все файлы с расширением `.c` и `.h` и отформатирует их:
+
+```bash
+clang-format -i $(find . -name "*.c" -o -name "*.h") 
 ```
 
 [К оглавлению](structs_headers_libs.md#структуры-управление-памятью-заголовочные-файлы)
