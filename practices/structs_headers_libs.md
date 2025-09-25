@@ -7,6 +7,7 @@
 + [Библиотеки: статические и динамические](structs_headers_libs.md#Библиотеки-статические-и-динамические)
 + [Продвинутая компиляция: Make и CMake](structs_headers_libs.md#Продвинутая-компиляция-Make-и-CMake)
 + [.clang-format](structs_headers_libs.md#clang-format)
++ [Cppcheck](structs_headers_libs.md#cppcheck)
 
 ## Структуры, объединения, typedef
 
