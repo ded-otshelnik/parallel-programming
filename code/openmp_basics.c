@@ -52,6 +52,17 @@ int main() {
 
     free(array);
 
+
+    // time measurement example
+    double start_time = omp_get_wtime();
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        // simulate some work
+        for (int j = 0; j < 1000; j++);
+    }
+    double end_time = omp_get_wtime();
+    printf("Elapsed time: %f seconds\n", end_time - start_time);
+
     // parallel sections example
     #pragma omp parallel sections
     {
