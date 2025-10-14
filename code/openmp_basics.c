@@ -17,6 +17,14 @@ int main() {
         printf("Hello from thread %d out of %d threads\n", thread_id, num_threads);
     }
 
+    // environment inquiry functions
+    // omp_get_num_procs() - number of processors
+    printf("Total number of proc: %d\n", omp_get_num_procs());
+    // omp_get_max_threads() - max number of threads
+    printf("Max threads: %d\n", omp_get_max_threads());
+    // omp_get_num_devices() - number of devices (usually GPUs)
+    printf("Total devices: %d\n", omp_get_num_devices());
+
     int *array = (int *)malloc(N * sizeof(int));
     for (int i = 0; i < N; i++) {
         // fill the array with values 1 to 10
@@ -131,8 +139,8 @@ int main() {
         int thread_id = omp_get_thread_num();
         #pragma omp parallel
         {
-                int nested_thread_id = omp_get_thread_num();
-                printf("Outer thread %d, Inner thread %d\n", thread_id, nested_thread_id);
+            int nested_thread_id = omp_get_thread_num();
+            printf("Outer thread %d, Inner thread %d\n", thread_id, nested_thread_id);
         }
     }
      // disable nested parallelism
@@ -178,11 +186,6 @@ int main() {
             {
                 printf("number %d in thread %d\n", rand_num, omp_get_thread_num());
             }
-            #pragma omp task
-            {
-                // simulate some processing
-                sleep(1);
-            }
         }
     }
 
@@ -199,7 +202,7 @@ int main() {
         #pragma omp master
         {
             for (int i = 0; i < 100; i++) {
-                #pragma omp task firstprivate(i)
+                #pragma omp task
                 {
                     // simulate some processing
                     printf("Processing item %d in thread %d\n", i, omp_get_thread_num());
@@ -213,9 +216,9 @@ int main() {
 
     // the same example with for
     printf("List processing with parallel for:\n");    
-    #pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for
     for (int i = 0; i < 100; i++) {
-        /// simulate some processing
+        // simulate some processing
         printf("Processing item %d in thread %d\n", i, omp_get_thread_num());
         // simulate time-consuming task
         // example processing: squaring the index
@@ -223,7 +226,7 @@ int main() {
     }
 
     free(list);
-
+    
     // linked list processing with tasks
     struct list_node {
         int value;
@@ -235,9 +238,10 @@ int main() {
     head->next = NULL;
 
     struct list_node *current = head;
-    for (int i = 1; i < 10; i++) {
-        struct list_node *new_node = (struct list_node *)malloc(sizeof(struct list_node));
+    for (int i = 1; i < 5; i++) {
+        struct list_node *new_node = (struct list_node *)malloc(sizeof(struct list_node) * 1);
         new_node->value = i;
+        new_node->next = NULL;
         current->next = new_node;
         current = new_node;
     }
@@ -260,5 +264,62 @@ int main() {
             }
         }
     }
+    // delete linked list
+    current = head;
+    while (current != NULL) {
+        struct list_node *next = current->next;
+        free(current);
+        current = next;
+    }
+
+    // taskyield example
+    printf("Taskyield example:\n");
+    #pragma omp parallel
+    {
+        #pragma omp master
+        {
+            #pragma omp task
+            {
+                for (int i = 0; i < 5; i++) {
+                    printf("Task 1 - iteration %d in thread %d\n", i, omp_get_thread_num());
+                    sleep(1); 
+                    #pragma omp taskyield
+                }
+            }
+            #pragma omp task
+            {
+                for (int i = 0; i < 5; i++) {
+                    printf("Task 2 - iteration %d in thread %d\n", i, omp_get_thread_num());
+                    sleep(1);
+                    #pragma omp taskyield
+                }
+            }
+        }
+    }
+
+    // threadprivate example
+    static int thread_local_var = 0;
+    #pragma omp threadprivate(thread_local_var)
+    #pragma omp parallel
+    {
+        int thread_id = omp_get_thread_num();
+        thread_local_var = thread_id + 1; // each thread sets its own value
+        printf("Thread %d: thread_local_var = %d\n", thread_id, thread_local_var);
+    }
+
+    printf("After parallel region:\n");
+    #pragma omp parallel
+    {
+        int thread_id = omp_get_thread_num();
+        printf("Thread %d: thread_local_var = %d\n", thread_id, thread_local_var);
+    }
+
+    printf("With copyin:\n");
+    #pragma omp parallel copyin(thread_local_var)
+    {
+        int thread_id = omp_get_thread_num();
+        printf("Thread %d: thread_local_var = %d\n", thread_id, thread_local_var);
+    }
+
     return 0;
 }
